@@ -224,7 +224,7 @@ const CreateOrUpdateEntryForm = (props: {
   };
 
   const onSelectFlags = (event, selection) => {
-    let prevSelectedFlags = flags.selected;
+    let prevSelectedFlags = flags.selected as string[];
 
     if (prevSelectedFlags.includes(selection)) {
       prevSelectedFlags = prevSelectedFlags.filter((item) => item !== selection);
@@ -431,7 +431,7 @@ const CreateOrUpdateEntryForm = (props: {
           aria-describedby="key-entry-helper"
           onChange={(_event, key) => onChangeKey(key)}
           onBlur={onBlurKey}
-          disabled={isEdition}
+          isDisabled={isEdition}
         />
         <FormHelperText>
           <HelperText>

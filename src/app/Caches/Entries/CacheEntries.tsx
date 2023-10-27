@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Bullseye,
   Button,
   ButtonVariant,
   Card,
   CardBody,
-  Bullseye,
   Divider,
   EmptyState,
+  EmptyStateActions,
   EmptyStateBody,
+  EmptyStateFooter,
+  EmptyStateHeader,
   EmptyStateIcon,
   EmptyStateVariant,
   Pagination,
   SearchInput,
   Toolbar,
   ToolbarContent,
-  ToolbarToggleGroup,
+  ToolbarFilter,
   ToolbarGroup,
   ToolbarItem,
-  ToolbarFilter,
-  Tooltip,
-  EmptyStateActions,
-  EmptyStateHeader,
-  EmptyStateFooter
+  ToolbarToggleGroup,
+  Tooltip
 } from '@patternfly/react-core';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core/deprecated';
-import { Table, Thead, Tr, Th, Tbody, Td, IAction, ActionsColumn } from '@patternfly/react-table';
-import { FilterIcon, SearchIcon, PlusCircleIcon, HelpIcon } from '@patternfly/react-icons';
-import { global_spacer_sm, global_spacer_md } from '@patternfly/react-tokens';
+import { ActionsColumn, IAction, Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { FilterIcon, HelpIcon, PlusCircleIcon, SearchIcon } from '@patternfly/react-icons';
+import { global_spacer_md, global_spacer_sm } from '@patternfly/react-tokens';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import displayUtils from '@services/displayUtils';
@@ -37,7 +37,6 @@ import { useConnectedUser } from '@app/services/userManagementHook';
 import { ConsoleACL } from '@services/securityService';
 import { CacheConfigUtils } from '@services/cacheConfigUtils';
 import { ContentType, EncodingType } from '@services/infinispanRefData';
-import { PopoverHelp } from '@app/Common/PopoverHelp';
 import { CreateOrUpdateEntryForm } from '@app/Caches/Entries/CreateOrUpdateEntryForm';
 import { ClearAllEntries } from '@app/Caches/Entries/ClearAllEntries';
 import { DeleteEntry } from '@app/Caches/Entries/DeleteEntry';
@@ -66,7 +65,30 @@ const CacheEntries = (props: { cacheName: string }) => {
   });
 
   useEffect(() => {
-    if (cacheEntries) setFilteredEntries(cacheEntries);
+    if (cache.encoding.key == EncodingType.Protobuf) {
+      setSelectSearchOption(ContentType.string);
+      setKeyContentTypeToEdit(ContentType.string);
+    } else if (cache.encoding.key == EncodingType.Java ||
+               cache.encoding.key == EncodingType.JBoss ||
+               cache.encoding.key == EncodingType.JavaSerialized) {
+      setSelectSearchOption(ContentType.StringContentType);
+      setKeyContentTypeToEdit(ContentType.StringContentType);
+    } else if (cache.encoding.key == EncodingType.XML){
+      setSelectSearchOption(ContentType.XML);
+      setKeyContentTypeToEdit(ContentType.XML);
+    } else if (cache.encoding.key == EncodingType.JSON) {
+      setSelectSearchOption(ContentType.JSON);
+      setSelectSearchOption(ContentType.JSON);
+    } else if (cache.encoding.key == EncodingType.Text) {
+      setSelectSearchOption(ContentType.StringContentType);
+      setSelectSearchOption(ContentType.StringContentType);
+    }
+  }, [cache]);
+
+  useEffect(() => {
+    if (cacheEntries) {
+      setFilteredEntries(cacheEntries);
+    }
   }, [loadingEntries, errorEntries, cacheEntries]);
 
   useEffect(() => {
@@ -253,7 +275,11 @@ const CacheEntries = (props: { cacheName: string }) => {
 
   const keyContentTypeOptions = () => {
     return CacheConfigUtils.getContentTypeOptions(cache.encoding.key as EncodingType).map((contentType) => (
-      <SelectOption id={contentType as string} key={contentType as string} value={contentType} />
+      <SelectOption
+        id={contentType == ContentType.customType ? 'customtype' : contentType}
+        key={contentType as string}
+        value={contentType}
+      />
     ));
   };
 

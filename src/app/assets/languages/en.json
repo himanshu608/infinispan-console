@@ -1,14 +1,18 @@
 {
   "brandname": {
     "brandname": "Infinispan",
+    "documentation-link": "https://infinispan.org/documentation/",
     "encoding-docs-link": "https://infinispan.org/docs/stable/titles/encoding/encoding.html",
     "persistence-docs-link": "https://infinispan.org/docs/stable/titles/configuring/configuring.html#persistence",
-    "configuration-docs-link": "https://infinispan.org/docs/stable/titles/configuring/configuring.html"
+    "configuration-docs-link": "https://infinispan.org/docs/stable/titles/configuring/configuring.html",
+    "default-roles-docs-link": "https://infinispan.org/docs/stable/titles/server/server.html#default-user-roles_server-getting-started"
   },
   "layout": {
     "console-name": "Server Management Console",
     "skip-to-content": "Skip to Content",
-    "about-name": "About"
+    "about-name": "About",
+    "documentation-name": "Documentation",
+    "close-browser-message": "Close the browser or open an incognito window to log again."
   },
   "welcome-page": {
     "welcome-title": "Welcome to {{brandname}} Server",
@@ -45,6 +49,11 @@
     "description": "That page no longer exists.",
     "button": "Return to home page"
   },
+  "not-auth-page": {
+    "title": "Unauthorized access",
+    "description": "Connected user lacks ADMIN permission.",
+    "button": "Return to home page"
+  },
   "support": {
     "no-user": "Credentials required.",
     "no-user-text": "You must enter credentials to access the console. Create a username and password to continue.",
@@ -72,6 +81,7 @@
     "available": "Make available",
     "clear-all-button": "Clear all",
     "cache-search": "Search by cache name",
+    "loading-caches": "Loading caches",
     "no-caches-status": "No caches",
     "no-caches-body": "Click \"Create a cache\" and provide configuration in XML, JSON, or YAML format or use a custom template. You can also create caches from the CLI and remote clients.",
     "no-filter-cache": "No result found",
@@ -103,8 +113,6 @@
     "parameters": "Parameters",
     "allowed-role": "Allowed role",
     "allowed-role-null": "-",
-    "no-tasks-status": "No tasks yet",
-    "no-tasks-body": "Create tasks with the CLI or a remote client.",
     "rebalancing": {
       "disabled-status": "Cluster rebalancing off",
       "enabled": "Cluster rebalancing on",
@@ -115,6 +123,12 @@
       "modal-enable-button": "Turn on rebalancing",
       "modal-cancel-button": "Cancel",
       "modal-description": "Temporarily disable only to avoid repeated cluster rebalancing operations when restarting a node or adding multiple nodes. Always enable cluster rebalancing as soon as possible to prevent data loss."
+    },
+    "tasks": {
+      "no-tasks-status": "No tasks",
+      "no-tasks-body": "Create tasks with the CLI or a remote client.",
+      "no-filtered-task": "No result found",
+      "no-filtered-task-body": "No tasks match your filter criteria."
     },
     "counters": {
       "strong-counters": "Strong counters",
@@ -265,6 +279,8 @@
           "remove": "Remove capability",
           "transactional-disabled": "This cache can not be transactional",
           "transactional-disabled-description": "Transactional caches are available in synchronous replication mode only. Remove the capability or chose synchronous replication.",
+          "authorization-disabled": "Authorization is disabled",
+          "authorization-disabled-description": "Authorization is available only when you configure {{brandname}} security and authorization, and the user has admin rights. Remove the capability or try with an admin role principal.",
           "backups-disabled": "Backups are disabled",
           "backups-disabled-description": "Backups are available only when you configure {{brandname}} to perform cross-site replication. Remove the capability or enable cross-site replication.",
           "secured-disabled": "The server is not secured",
@@ -497,7 +513,7 @@
       "table-label": "Create caches from custom templates.",
       "no-encoding-warning": "This cache either has no encoding configuration or uses an encoding that the console does not support. You must use Hot Rod clients to perform read and write operations on this cache.",
       "encoding-docs-message": "See \"Cache Encoding and Marshalling\" in the documentation.",
-      "pojo-encoding": "This cache uses \"{{encoding}}\" encoding. {{brandname}} Console might not fully support data manipulation or displaying entries for caches that don't use ProtoStream encoding."
+      "pojo-encoding": "This cache uses \"{{encodingKey}}\" encoding for keys and \"{{encodingValue}}\" for values. {{brandname}} Console might not fully support data manipulation or displaying entries for caches that don't use ProtoStream encoding."
     },
     "tabs": {
       "entries": "Entries",
@@ -518,7 +534,8 @@
       "action-see-less": "See fewer cache details",
       "action-see-more": "See more cache details",
       "action-manage-indexes": "Manage indexes",
-      "refresh": "Refresh"
+      "refresh": "Refresh",
+      "back": "Back"
     },
     "entries": {
       "action-edit": "Edit",
@@ -655,9 +672,9 @@
       "data-access-title": "Data access",
       "data-access-expanded": "Show more information",
       "data-access-collapsed": "Show less information",
-      "average-reads": "Average cache read time",
-      "average-writes": "Average cache write time",
-      "average-deletes": "Average cache delete time",
+      "average-reads": "Avg. cache read time",
+      "average-writes": "Avg. cache write time",
+      "average-deletes": "Avg. cache delete time",
       "average-reads-tooltip": "Average time, in milliseconds, for read operations to complete.",
       "average-writes-tooltip": "Average time, in milliseconds, for write operations to complete.",
       "average-deletes-tooltip": "Average time, in milliseconds, for delete operations to complete.",
@@ -684,9 +701,9 @@
       "approximate-entries-in-memory-tooltip": "Displays the approximate number of entries in memory. May include replicas.",
       "min-nodes": "Minimum number of nodes",
       "min-nodes-tooltip": "Displays the number of nodes that must remain in the cluster to avoid data loss.",
-      "cache-size-off-heap": "Size of cache in off-heap memory",
+      "cache-size-off-heap": "Size in off-heap memory",
       "cache-size-off-heap-tooltip": "Displays the amount of off-heap memory that data in the cache uses. Total memory usage is higher because it includes internal data structures.",
-      "cache-size-heap": "Size of cache in heap memory",
+      "cache-size-heap": "Size in heap memory",
       "cache-size-heap-tooltip": "Displays the amount of JVM heap memory that data in the cache uses. Total memory usage is higher because it includes internal data structures.",
       "data-distribution": "Data distribution",
       "data-distribution-title": "Data for nodes",
@@ -700,7 +717,12 @@
       "data-distribution-table": "Data distribution table",
       "data-distribution-no-filtered": "No result found",
       "data-distribution-no-filtered-body": "No result found for searched value. Clear the filter and try again",
-      "data-distribution-search": "Search by node name"
+      "data-distribution-search": "Search by node name",
+      "cache-lifecycle-title": "Lifecycle",
+      "cache-started-since": "Time since start",
+      "cache-reset-since": "Time since reset",
+      "cache-started-since-info": "Elapsed time in seconds since the cache was started.",
+      "cache-reset-since-info": "Elapsed time in seconds since the statistics were last reset."
     }
   },
   "schemas": {
@@ -814,5 +836,56 @@
     "local-address": "Local address",
     "null": "N/A",
     "more-info": "More info"
+  },
+  "access-management": {
+    "title": "Access management",
+    "description": "Access management allows you to control {{brandname}} Server administration.",
+    "tab-roles": "Roles",
+    "tab-access-control": "Access control",
+    "roles": {
+      "role-name": "Role name",
+      "role-name-tooltip": "Role name prefixed with a lock indicates that the role is predefined and cannot be edited.",
+      "permissions": "Permissions",
+      "role-description": "Description",
+      "search-placeholder": "Find by name",
+      "no-roles-found": "No roles found",
+      "no-roles-body": "You can create a role to manage access to {{brandname}} Server administration.",
+      "no-filtered-roles-body": "No roles match your search criteria.",
+      "roles-hint-link": "Learn more in the {{brandname}} documentation",
+      "loading-roles": "Loading roles",
+      "create-button": "Create role",
+      "delete-action": "Delete",
+      "no-roles-status": "No roles",
+      "permission-all": "All the permissions",
+      "permission-admin": "Allows performing \"administrative\" operations",
+      "permission-all-read": "Implies all read permissions",
+      "permission-read": "Allows reading data from a cache",
+      "permission-bulk-read": "Allows bulk-read operations on a cache",
+      "permission-all-write": "Implies all write permissions",
+      "permission-write": "Allows writing data to a cache",
+      "permission-bulk-write": "Allows bulk-write operations on a cache",
+      "permission-monitor": "Allows retrieval of stats",
+      "permission-create": "Allows creation of resources (caches, counters, schemas, tasks)",
+      "permission-exec": "Allows performing task execution",
+      "permission-listen": "Allows attaching listeners to a cache",
+      "permission-lifecycle": "Allows control of a cache's lifecycle",
+      "permission-none": "No permissions",
+      "modal-create-title": "Create role",
+      "modal-create-description": "Create a new role.",
+      "modal-save-action": "Save",
+      "modal-cancel-button": "Cancel",
+      "modal-role-name": "Name",
+      "modal-role-description": "Description",
+      "modal-permissions": "Permissions",
+      "modal-permissions-list-placeholder": "Select permissions",
+      "modal-role-exists": "Role {{name}} already exists",
+      "modal-role-name-is-required": "Role name is required",
+      "modal-permissions-is-required": "Select at least one permission",
+      "modal-delete-title": "Delete role {{name}}?",
+      "modal-delete-description-1": "The role {{name}} will be permanently deleted in {{brandname}} Server. Caches using this role will be affected.",
+      "modal-delete-description-2": "You can always recreate the role.",
+      "delete-success": "Role {{name}} has been deleted",
+      "delete-error": "Unexpected error deleting the role {{name}}"
+    }
   }
 }
